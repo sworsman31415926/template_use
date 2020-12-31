@@ -1,0 +1,74 @@
+$ g++ function.cpp main.cpp
+function.cpp:3:22: error: conflicting declaration ‘class T1’
+    3 | template<typename T1,typename T1>
+      |                      ^~~~~~~~
+function.cpp:3:10: note: previous declaration as ‘class T1’
+    3 | template<typename T1,typename T1>
+      |          ^~~~~~~~
+function.cpp:4:1: error: ‘Myclass’ does not name a type; did you mean ‘class’?
+    4 | Myclass<T1,T1>::Myclass(T1 a,T1 b)
+      | ^~~~~~~
+      | class
+function.cpp:9:19: error: conflicting declaration ‘class T1’
+    9 | template<class T1,class T1>
+      |                   ^~~~~
+function.cpp:9:10: note: previous declaration as ‘class T1’
+    9 | template<class T1,class T1>
+      |          ^~~~~
+function.cpp:10:13: error: expected initializer before ‘<’ token
+   10 | void Myclass<T1,T1>::show()
+      |             ^
+main.cpp: In function ‘int main()’:
+main.cpp:5:2: error: ‘Myclass’ was not declared in this scope; did you mean ‘class’?
+    5 |  Myclass <int,double>m1(12,0.15);               //用类模板定义对象m1,此时T1,T2分别被int、double取代
+      |  ^~~~~~~
+      |  class
+main.cpp:5:11: error: expected primary-expression before ‘int’
+    5 |  Myclass <int,double>m1(12,0.15);               //用类模板定义对象m1,此时T1,T2分别被int、double取代
+      |           ^~~
+main.cpp:6:11: error: expected primary-expression before ‘int’
+    6 |  Myclass <int,char*>m2(12,"This a test.");      //用类模板定义对象m2,此时T1,T2分别被int,char*取代
+      |           ^~~
+main.cpp:8:2: error: ‘m1’ was not declared in this scope
+    8 |  m1.show();
+      |  ^~
+main.cpp:9:2: error: ‘m2’ was not declared in this scope
+    9 |  m2.show();
+      |  ^~
+。。。。。。。。。。。。。。。。。。。。。。。。。
+$ g++ function.cpp main.cpp
+function.cpp:12:27: error: invalid use of incomplete type ‘class Myclass<T1, T1>’
+   12 | void Myclass<T1,T1>::show()
+      |                           ^
+In file included from function.cpp:1:
+function.hpp:4:7: note: declaration of ‘class Myclass<T1, T1>’
+    4 | class Myclass
+      |       ^~~~~~~
+main.cpp: In function ‘int main()’:
+main.cpp:7:27: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+    7 |  Myclass <int,char*>m2(12,"This a test.");      //用类模板定义对象m2,此时T1,T2分别被int,char*取代
+      |                           ^~~~~~~~~~~~~~
+
+。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
+$ g++ function.cpp main.cpp
+main.cpp: In function ‘int main()’:
+main.cpp:7:27: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+    7 |  Myclass <int,char*>m2(12,"This a test.");      //用类模板定义对象m2,此时T1,T2分别被int,char*取代
+      |                           ^~~~~~~~~~~~~~
+/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin/ld: /tmp/ccM63UXZ.o:main.cpp:(.text+0x26): undefined reference to `Myclass<int, double>::Myclass(int, double)'
+/tmp/ccM63UXZ.o:main.cpp:(.text+0x26): relocation truncated to fit: R_X86_64_PC32 against undefined symbol `Myclass<int, double>::Myclass(int, double)'
+/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin/ld: /tmp/ccM63UXZ.o:main.cpp:(.text+0x3e): undefined reference to `Myclass<int, char*>::Myclass(int, char*)'
+/tmp/ccM63UXZ.o:main.cpp:(.text+0x3e): relocation truncated to fit: R_X86_64_PC32 against undefined symbol `Myclass<int, char*>::Myclass(int, char*)'
+/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin/ld: /tmp/ccM63UXZ.o:main.cpp:(.text+0x4a): undefined reference to `Myclass<int, double>::show()'
+/tmp/ccM63UXZ.o:main.cpp:(.text+0x4a): relocation truncated to fit: R_X86_64_PC32 against undefined symbol `Myclass<int, double>::show()'
+/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin/ld: /tmp/ccM63UXZ.o:main.cpp:(.text+0x56): undefined reference to `Myclass<int, char*>::show()'
+/tmp/ccM63UXZ.o:main.cpp:(.text+0x56): relocation truncated to fit: R_X86_64_PC32 against undefined symbol `Myclass<int, char*>::show()'
+collect2: error: ld returned 1 exit status
+。。。。。。。。。。。。。。。。。。。。。。。。。。
+$ g++ function.cpp main.cpp
+/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin/ld: /tmp/cctgUJH6.o:main.cpp:(.text+0x26): undefined reference to `Myclass<int, double>::Myclass(int, double)'
+/tmp/cctgUJH6.o:main.cpp:(.text+0x26): relocation truncated to fit: R_X86_64_PC32 against undefined symbol `Myclass<int, double>::Myclass(int, double)'
+/usr/lib/gcc/x86_64-pc-cygwin/10/../../../../x86_64-pc-cygwin/bin/ld: /tmp/cctgUJH6.o:main.cpp:(.text+0x32): undefined reference to `Myclass<int, double>::show()'
+/tmp/cctgUJH6.o:main.cpp:(.text+0x32): relocation truncated to fit: R_X86_64_PC32 against undefined symbol `Myclass<int, double>::show()'
+collect2: error: ld returned 1 exit status
+
